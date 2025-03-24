@@ -5,7 +5,7 @@ import AppPagination from './AppPagination.vue'
 
 describe('# AppPagination', () => {
   it('should highlight current active page', () => {
-    const { getByRole } = render(AppPagination, renderOptions({
+    let { getByRole } = render(AppPagination, renderOptions({
       props: { page: 1, count: 15 },
     }))
 
@@ -14,8 +14,8 @@ describe('# AppPagination', () => {
   })
 
   it('should call onPageChange when click a page item', async () => {
-    const onPageChange = vi.fn()
-    const { getByRole } = render(AppPagination, renderOptions({
+    let onPageChange = vi.fn()
+    let { getByRole } = render(AppPagination, renderOptions({
       props: { page: 1, count: 15, onPageChange },
     }))
 

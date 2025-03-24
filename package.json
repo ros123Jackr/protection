@@ -1,0 +1,61 @@
+{
+  "name": "vue3-realworld-example-app",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "prepare": "simple-git-hooks",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview --port 4173",
+    "type-check": "vue-tsc --noEmit",
+    "lint": "eslint --fix .",
+    "test": "npm run test:unit && npm run test:e2e:ci",
+    "test:e2e": "npm run build && concurrently -rk -s first \"npm run serve\" \"cypress open --e2e -c baseUrl=http://localhost:4173\"",
+    "test:e2e:ci": "npm run build && concurrently -rk -s first \"npm run serve\" \"cypress run --e2e -c baseUrl=http://localhost:4173\"",
+    "test:e2e:local": "cypress open --e2e -c baseUrl=http://localhost:5173",
+    "test:e2e:prod": "cypress run --e2e -c baseUrl=https://vue3-realworld-example-app-mutoe.vercel.app",
+    "test:unit": "vitest run",
+    "generate:api": "curl -sL https://raw.githubusercontent.com/gothinkster/realworld/main/api/openapi.yml -o ./src/services/openapi.yml && sta -p ./src/services/openapi.yml -o ./src/services -n api.ts"
+  },
+  "dependencies": {
+    "insane": "^2.6.2",
+    "marked": "^14.0.0",
+    "pinia": "^2.2.1",
+    "vue": "^3.4.37",
+    "vue-router": "^4.4.3"
+  },
+  "devDependencies": {
+    "@mutoe/eslint-config": "^2.8.3",
+    "@pinia/testing": "^0.1.5",
+    "@testing-library/cypress": "^10.0.2",
+    "@testing-library/user-event": "^14.5.2",
+    "@testing-library/vue": "^8.1.0",
+    "@vitejs/plugin-vue": "^5.1.2",
+    "@vitest/coverage-v8": "^2.0.5",
+    "concurrently": "^8.2.2",
+    "cypress": "^13.13.2",
+    "eslint": "^8.57.0",
+    "eslint-plugin-cypress": "^3.4.0",
+    "eslint-plugin-vitest": "^0.5.4",
+    "eslint-plugin-vue": "^9.27.0",
+    "happy-dom": "^14.12.3",
+    "lint-staged": "^15.2.8",
+    "msw": "^2.3.5",
+    "rollup-plugin-analyzer": "^4.0.0",
+    "simple-git-hooks": "^2.11.1",
+    "swagger-typescript-api": "^13.0.16",
+    "typescript": "~5.5.4",
+    "vite": "^5.4.0",
+    "vitest": "^2.0.5",
+    "vitest-dom": "^0.1.1",
+    "vue-tsc": "^2.0.29"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npm exec lint-staged",
+    "pre-push": "npm run lint && npm run build"
+  },
+  "lint-staged": {
+    "*": "eslint --fix"
+  }
+}

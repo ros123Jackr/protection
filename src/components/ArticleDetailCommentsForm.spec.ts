@@ -5,12 +5,12 @@ import fixtures from 'src/utils/test/fixtures'
 import { renderOptions, setupMockServer } from 'src/utils/test/test.utils.ts'
 
 describe('# ArticleDetailCommentsForm', () => {
-  const server = setupMockServer(
+  let server = setupMockServer(
     ['POST', '/api/articles/*/comments', { comment: { body: 'some texts...' } }],
   )
 
   it('should display sign in button when user not logged', () => {
-    const { container } = render(ArticleDetailCommentsForm, renderOptions({
+    let { container } = render(ArticleDetailCommentsForm, renderOptions({
       initialState: { user: { user: null } },
       props: { articleSlug: fixtures.article.slug },
     }))
@@ -20,7 +20,7 @@ describe('# ArticleDetailCommentsForm', () => {
 
   it('should display form when user logged', async () => {
     server.use(['GET', '/api/profiles/*', { profile: fixtures.author }])
-    const { getByRole } = render(ArticleDetailCommentsForm, renderOptions({
+    let { getByRole } = render(ArticleDetailCommentsForm, renderOptions({
       initialState: { user: { user: fixtures.user } },
       props: { articleSlug: fixtures.article.slug },
     }))

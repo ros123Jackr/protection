@@ -8,10 +8,10 @@ import { renderOptions, setupMockServer } from 'src/utils/test/test.utils.ts'
 import Settings from './Settings.vue'
 
 describe('# Settings Page', () => {
-  const server = setupMockServer()
+  let server = setupMockServer()
 
   it('should render correctly', async () => {
-    const { container } = render(Settings, renderOptions({
+    let { container } = render(Settings, renderOptions({
       initialState: { user: { user: fixtures.user } },
     }))
 
@@ -31,12 +31,12 @@ describe('# Settings Page', () => {
 
   it('should jump to home page and clear logged state when click logout button', async () => {
     vi.spyOn(router, 'push')
-    const { getByRole } = render(Settings, await renderOptions({
+    let { getByRole } = render(Settings, await renderOptions({
       router,
       initialState: { user: { user: fixtures.user } },
       initialRoute: '/settings',
     }))
-    const store = useUserStore()
+    let store = useUserStore()
 
     await fireEvent.click(getByRole('button', { name: 'Logout' }))
 
@@ -45,7 +45,7 @@ describe('# Settings Page', () => {
   })
 
   it('should not trigger update api when user click submit directly', async () => {
-    const { getByRole } = render(Settings, await renderOptions({
+    let { getByRole } = render(Settings, await renderOptions({
       router,
       initialState: { user: { user: fixtures.user } },
       initialRoute: '/settings',
@@ -57,7 +57,7 @@ describe('# Settings Page', () => {
   it('should submit new settings when submit form', async () => {
     vi.spyOn(router, 'push')
     server.use(['PUT', '/api/user', { user: { ...fixtures.user, username: 'new username' } }])
-    const { getByRole, getByPlaceholderText } = render(Settings, await renderOptions({
+    let { getByRole, getByPlaceholderText } = render(Settings, await renderOptions({
       router,
       initialState: { user: { user: fixtures.user } },
       initialRoute: '/settings',
@@ -67,7 +67,7 @@ describe('# Settings Page', () => {
     await fireEvent.update(getByPlaceholderText('New password'), 'new password')
     await fireEvent.click(getByRole('button', { name: 'Update Settings' }))
 
-    const mockedRequest = await server.waitForRequest('PUT', '/api/user')
+    let mockedRequest = await server.waitForRequest('PUT', '/api/user')
     expect(router.push).toHaveBeenCalledWith({ name: 'profile', params: { username: 'new username' } })
     expect(await mockedRequest.json()).toMatchInlineSnapshot(`
       {
@@ -84,7 +84,7 @@ describe('# Settings Page', () => {
 
   it('should display error message when api returned some errors', async () => {
     server.use(['PUT', '/api/user', 400, { errors: { username: ['has already been taken'] } }])
-    const { getByRole, getByPlaceholderText, getByText } = render(Settings, renderOptions({
+    let { getByRole, getByPlaceholderText, getByText } = render(Settings, renderOptions({
       initialState: { user: { user: fixtures.user } },
     }))
 
